@@ -10,8 +10,9 @@ class Menu extends BaseController
     public function __construct()
     {
         $this->loadModel = model('CMS/Menu');
+        $this->SubMenuModel = model('CMS/SubMenu');
     }
-    public function index()
+    public function list()
     {
         $data['menu'] = 'cms';
         $data['submenu'] = 'menu';
@@ -27,16 +28,24 @@ class Menu extends BaseController
     public function save_menu(){
         if($post = $this->request->getPost()){
             $model = $this->loadModel;
+            $subMod = $this->SubMenuModel;
             $no = 1;
             foreach($post['id_menu'] as $row){
                 
                 $data['id'] = $row;
                 $data['urutan'] = $no;
-                $data['status'] = 1;
 
                 $model->save($data);
-
                 $no++;
+            }
+            $i=1;
+            foreach($post['id_submenu'] as $submenu){
+                
+                $datasub['id'] = $submenu;
+                $datasub['urutan'] = $i;
+                
+                $subMod->save($datasub);
+                $i++;
             }
         }
     }
@@ -77,15 +86,20 @@ class Menu extends BaseController
             return $this->respond(jsonRes('validation_error', $validation->getErrors()));
         } else {
             if($post['parent'] == 1){
-                if($post['id_menu'] != ''){
-                    $post['id'] = $post['id_menu'];
+                if($post['id'] != ''){
+                    $post['id'] = $post['id'];
                 }else{
                     $last = $model->selectMax('urutan')->first();
                     $post['urutan'] = $last['urutan'] + 1;
                 }
+
+                if(isset($post['status'])){
+                    $post['status'] = 1;
+                }else{
+                    $post['status'] = 0;
+                }
                 
                 $post['slug'] = $slug->slugify($post['nama_menu']);
-                $post['status'] = 1;
 
                 $model->save($post);
             }else{
@@ -93,8 +107,13 @@ class Menu extends BaseController
                 $post['slug'] = $slug->slugify($post['nama_menu']);
                 $post['menu_id'] = $post['id_menu'];
                 $post['urutan'] = $last['urutan'] + 1;
-                $post['status'] = 1;
                 $post['nama_sub'] = $post['nama_menu'];
+
+                if(isset($post['status'])){
+                    $post['status'] = 1;
+                }else{
+                    $post['status'] = 0;
+                }
 
                 $SubModel->save($post);
             }
@@ -110,6 +129,21 @@ class Menu extends BaseController
             $model = $this->loadModel;
             $id = $post['value'];
             $data = $model->where('id', $id)->first();
+            $data['parent'] = 1;
+            
+            echo json_encode($data);
+        }
+    }
+
+    public function get_submenu()
+    {
+        if($post = $this->request->getVar()){
+            $model = $this->SubMenuModel;
+            $id = $post['value'];
+            $data = $model->where('id', $id)->first();
+
+            $data['nama_menu'] = $data['nama_sub'];
+            $data['parent'] = 0;
             
             echo json_encode($data);
         }

@@ -1,7 +1,15 @@
 {
     "name": "colabs/cms-plugin",
-    "description": "Ini adalah plugin CMS yang di buat oleh organisasi Colabs Indonesia",
+    "description": "Cms Builder for CodeIgniter 4",
     "type": "library",
+    "require": {
+        "php": "^7.3",
+        "cocur/slugify": "^4.1"
+    },
+    "require-dev": {
+        "codeigniter4/codeigniter4": "dev-develop",
+        "codeigniter4/codeigniter4-standard": "^1.0"
+    },
     "license": "MIT",
     "autoload": {
         "psr-4": {
@@ -13,6 +21,5 @@
             "name": "rendra24",
             "email": "rendraseptian24@gmail.com"
         }
-    ],
-    "require": {}
+    ]
 }

@@ -12,7 +12,7 @@ class Content extends BaseController
         $this->menuModel = model('CMS/Menu');
         $this->kontenModel = model('CMS/Content');
     }
-    public function index()
+    public function list()
     {
         $menu = $this->request->getGet('menu');
         $check_menu = $this->menuModel->where('slug', $menu)->first();

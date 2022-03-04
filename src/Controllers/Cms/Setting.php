@@ -10,7 +10,7 @@ class Setting extends BaseController
     {
         $this->loadModel = model('CMS/Setting');
     }
-    public function index()
+    public function list()
     {
         $data['menu'] = 'cms';
         $data['submenu'] = 'about';
@@ -23,7 +23,12 @@ class Setting extends BaseController
         foreach ($post['id'] as $key => $item) {
             $saving['id'] = $post['id'][$key];
             $saving['value'] = $post['data'][$key];
-            $saving['status'] = $post['flag'][$key];
+            if(isset($post['flag'][$key])){
+                $saving['status'] = $post['flag'][$key];
+            }else{
+                $saving['status'] = 0;
+            }
+            
             
             $this->loadModel->save($saving);
         }

@@ -10,7 +10,7 @@ class Kategori extends BaseController
     {
         $this->loadModel = model('CMS/Category');
     }
-    public function index()
+    public function list()
     {
         $data['menu'] = 'cms';
         $data['submenu'] = 'kategori';
@@ -30,6 +30,7 @@ class Kategori extends BaseController
         $gData['action'] = 'edit|delete';
         $gData['url']['edit'] = 'cms/newsblog/form';
         $gData['url']['delete'] = 'cms/newsblog/delete';
+        $gData['helper']['status'] = ['formatStatus', 'default|{data}'];
         $data = jsonGenrateTables('success', $gData);
         return $this->respond($data);
     }
